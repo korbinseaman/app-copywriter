@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""HarmonyOS 文案质量检查脚本
+"""手机系统应用文案质量检查脚本
 
 检查项：
 1. 字数限制
 2. 禁用词检测
 3. 格式规范
-4. HarmonyOS 术语一致性
+4. 术语一致性
 """
 
 import sys
-import json
 import re
 
 
@@ -19,15 +18,12 @@ FORBIDDEN_WORDS = [
     "史上最佳", "绝无仅有", "天下第一",
 ]
 
-# HarmonyOS 偏好词（建议替换）
-PREFERRED_TERMS = {
-    "智能": "智慧（HarmonyOS 品牌场景下）",
-    "同步": "流转（跨设备场景下）",
-    "文件夹": "空间",
-    "通知中心": "服务中心",
-    "小程序": "元服务",
-    "插件": "服务卡片",
-    "云盘": "云空间",
+# 建议用词（提示性，非强制替换）
+SUGGESTED_TERMS = {
+    "云盘": "云服务 / 云备份",
+    "插件": "小组件 / Widget",
+    "推送": "通知 / 提醒",
+    "小程序": "轻应用 / 快速应用",
 }
 
 # 中英文混排检查：英文前后应有空格
@@ -57,7 +53,7 @@ def check_forbidden_words(text):
 def check_terminology(text):
     """检查术语使用"""
     issues = []
-    for wrong, suggestion in PREFERRED_TERMS.items():
+    for wrong, suggestion in SUGGESTED_TERMS.items():
         if wrong in text:
             issues.append(f"💡 建议替换：「{wrong}」→ {suggestion}")
     return issues
@@ -91,7 +87,7 @@ def validate(text, max_chars=None, min_chars=None):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("用法: python copy-validator.py <文本> [最大字数] [最小字数]")
-        print("示例: python copy-validator.py '智慧修图，一触即达' 20")
+        print("示例: python copy-validator.py '智能修图，一触即达' 20")
         sys.exit(0)
 
     text = sys.argv[1]
